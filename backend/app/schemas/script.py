@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from app.schemas.parse import ParsedScene
+from app.schemas.semantic import CharacterRecord
 
 
 class StoredScriptSummary(BaseModel):
@@ -24,6 +25,7 @@ class StoredScriptResponse(BaseModel):
     total_elements: int
     scenes: list[ParsedScene]
     warnings: list[str]
+    characters: list[CharacterRecord]
     created_at: datetime
 
     model_config = {"from_attributes": True}

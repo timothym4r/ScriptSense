@@ -4,16 +4,19 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from app.schemas.parse import ParseRequest, ParsedScriptResponse
 from app.services.parsing.screenplay_parser import ScreenplayParser
+from app.services.semantic.enricher import SemanticEnricher
 
 router = APIRouter(tags=["parse"])
 
 parser = ScreenplayParser()
+semantic_enricher = SemanticEnricher()
 
 
 @router.post("/parse", response_model=ParsedScriptResponse)
 def parse_script(request: ParseRequest) -> ParsedScriptResponse:
     parsed = parser.parse(raw_text=request.raw_text, title=request.title)
-    return ParsedScriptResponse.model_validate(parsed)
+    enriched = semantic_enricher.enrich(parsed)
+    return ParsedScriptResponse.model_validate(enriched)
 
 
 @router.post("/parse-file", response_model=ParsedScriptResponse)
@@ -34,4 +37,5 @@ async def parse_script_file(
         ) from exc
 
     parsed = parser.parse(raw_text=raw_text, title=title or script_file.filename)
-    return ParsedScriptResponse.model_validate(parsed)
+    enriched = semantic_enricher.enrich(parsed)
+    return ParsedScriptResponse.model_validate(enriched)

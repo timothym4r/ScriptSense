@@ -9,6 +9,7 @@ from app.repositories.script_repository import ScriptRepository
 from app.schemas.parse import ParsedScriptResponse, ParseRequest
 from app.schemas.script import StoredScriptResponse, StoredScriptSummary
 from app.services.parsing.screenplay_parser import ScreenplayParser
+from app.services.semantic.enricher import SemanticEnricher
 
 
 class ScriptService:
@@ -16,9 +17,11 @@ class ScriptService:
         self,
         parser: Optional[ScreenplayParser] = None,
         repository: Optional[ScriptRepository] = None,
+        semantic_enricher: Optional[SemanticEnricher] = None,
     ) -> None:
         self.parser = parser or ScreenplayParser()
         self.repository = repository or ScriptRepository()
+        self.semantic_enricher = semantic_enricher or SemanticEnricher()
 
     def create_and_parse(self, session: Session, request: ParseRequest) -> StoredScriptResponse:
         parsed = self.parser.parse(raw_text=request.raw_text, title=request.title)
@@ -109,13 +112,23 @@ class ScriptService:
                 }
             )
 
-        return StoredScriptResponse(
-            id=script.id,
+        parsed = ParsedScriptResponse(
             title=script.title,
-            raw_text=script.raw_text,
             total_scenes=script.total_scenes,
             total_elements=total_elements,
             scenes=scenes,
             warnings=script.warnings,
+        )
+        enriched = self.semantic_enricher.enrich(parsed)
+
+        return StoredScriptResponse(
+            id=script.id,
+            title=script.title,
+            raw_text=script.raw_text,
+            total_scenes=enriched.total_scenes,
+            total_elements=enriched.total_elements,
+            scenes=enriched.scenes,
+            warnings=enriched.warnings,
+            characters=enriched.characters,
             created_at=script.created_at,
         )

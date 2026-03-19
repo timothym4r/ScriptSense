@@ -2,6 +2,7 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
+from app.schemas.semantic import ActionAttribution, CharacterRecord, EnrichedMention
 
 ElementType = Literal[
     "scene_heading",
@@ -24,6 +25,9 @@ class ParsedElement(BaseModel):
     start_line: int
     end_line: int
     speaker: Optional[str] = None
+    speaker_character_id: Optional[str] = None
+    mentions: list[EnrichedMention] = Field(default_factory=list)
+    action_attribution: Optional[ActionAttribution] = None
 
 
 class ParsedScene(BaseModel):
@@ -40,3 +44,4 @@ class ParsedScriptResponse(BaseModel):
     total_elements: int
     scenes: list[ParsedScene]
     warnings: list[str] = Field(default_factory=list)
+    characters: list[CharacterRecord] = Field(default_factory=list)

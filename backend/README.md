@@ -8,6 +8,7 @@ Minimal FastAPI backend for Phase 1 of ScriptSense.
 - accepts uploaded plaintext screenplay files
 - parses scripts into scenes, action blocks, dialogue blocks, speakers, and parentheticals
 - stores raw scripts and parsed outputs with SQLAlchemy
+- enriches parsed output with a semantic attribution layer
 - returns structured JSON
 - includes parser unit tests and API smoke tests
 
@@ -19,6 +20,7 @@ Minimal FastAPI backend for Phase 1 of ScriptSense.
 - pytest
 - SQLAlchemy
 - PostgreSQL
+- heuristic semantic enrichment modules
 
 ## Run Locally
 
@@ -164,7 +166,97 @@ curl "http://127.0.0.1:8000/api/v1/scripts/<script-id>"
       ]
     }
   ],
-  "warnings": []
+  "warnings": [],
+  "characters": [
+    {
+      "canonical_character_id": "char_001",
+      "canonical_name": "MIA",
+      "aliases": [
+        {
+          "alias_text": "MIA",
+          "normalized_alias": "MIA",
+          "alias_type": "speaker",
+          "confidence": 1.0
+        }
+      ],
+      "source_types": ["speaker"],
+      "dialogue_block_count": 1,
+      "mention_count": 0
+    }
+  ]
+}
+```
+
+## Semantic Enrichment Layer
+
+The backend now applies a semantic enrichment pass after the rules-based parser finishes. The parser remains the baseline structural system; enrichment is layered on top of the parsed scene and block stream.
+
+Current enrichment behavior:
+
+- builds a canonical character registry from speaker cues and action mentions
+- normalizes simple alias variants such as title-stripped names
+- extracts mentions from action and description blocks
+- attempts scene-local pronoun and reference resolution when there is enough evidence
+- attributes action blocks to likely characters
+- preserves ambiguity with candidate lists and explicit resolution status fields
+
+Key enriched fields include:
+
+- `speaker_character_id`
+- `characters`
+- `mentions`
+- `canonical_character_id`
+- `mention_text`
+- `mention_type`
+- `resolved_character`
+- `resolved_character_candidates`
+- `attribution_confidence`
+- `resolution_status`
+- `action_attribution`
+
+Example enriched action block fragment:
+
+```json
+{
+  "element_type": "action",
+  "text": "Jonah enters with a torn envelope. He drops it on the table.",
+  "mentions": [
+    {
+      "canonical_character_id": "char_002",
+      "mention_text": "Jonah",
+      "mention_type": "name",
+      "resolved_character": {
+        "canonical_character_id": "char_002",
+        "canonical_name": "JONAH"
+      },
+      "resolved_character_candidates": [],
+      "attribution_confidence": 0.78,
+      "resolution_status": "resolved"
+    },
+    {
+      "canonical_character_id": "char_002",
+      "mention_text": "He",
+      "mention_type": "pronoun",
+      "resolved_character": {
+        "canonical_character_id": "char_002",
+        "canonical_name": "JONAH"
+      },
+      "resolved_character_candidates": [],
+      "attribution_confidence": 0.58,
+      "resolution_status": "resolved"
+    }
+  ],
+  "action_attribution": {
+    "canonical_character_id": "char_002",
+    "resolved_character": {
+      "canonical_character_id": "char_002",
+      "canonical_name": "JONAH"
+    },
+    "resolved_character_candidates": [],
+    "attribution_confidence": 0.9,
+    "resolution_status": "resolved",
+    "rationale": "explicit character mention in action text"
+  }
 }
 ```
 

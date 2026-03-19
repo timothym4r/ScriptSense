@@ -58,6 +58,7 @@ def test_parse_endpoint(client: TestClient) -> None:
     assert body["total_scenes"] == 1
     assert body["scenes"][0]["heading"] == "INT. ROOM - DAY"
     assert body["scenes"][0]["elements"][1]["speaker"] == "MIA"
+    assert body["characters"][0]["canonical_name"] == "MIA"
 
 
 def test_parse_file_endpoint(client: TestClient, fixture_dir: Path) -> None:
@@ -89,6 +90,7 @@ def test_create_list_and_fetch_stored_scripts(client: TestClient) -> None:
     assert created["title"] == "Persisted Screenplay"
     assert created["raw_text"] == payload["raw_text"]
     assert created["total_scenes"] == 1
+    assert created["characters"][0]["canonical_name"] == "MIA"
 
     list_response = client.get("/api/v1/scripts")
     assert list_response.status_code == 200

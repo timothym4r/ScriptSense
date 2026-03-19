@@ -141,3 +141,43 @@ The printer jams again.
     action = next(element for element in result.scenes[0].elements if element.element_type == "action")
     assert "MIA" in action.text
     assert "The printer jams again." in action.text
+
+
+def test_realistic_continued_dialogue_fixture_is_grouped_cleanly(fixture_dir: Path) -> None:
+    raw_text = (fixture_dir / "continued_dialogue_screenplay.txt").read_text()
+
+    result = ScreenplayParser().parse(raw_text=raw_text, title="Continued Dialogue")
+
+    elements = result.scenes[0].elements
+    assert [element.element_type for element in elements] == [
+        "scene_heading",
+        "dialogue",
+        "parenthetical",
+        "dialogue",
+    ]
+    assert elements[2].speaker == "MIA"
+    assert elements[3].speaker == "MIA"
+    assert elements[3].text == "Then again, maybe I can."
+
+
+def test_realistic_numbered_scene_fixture_detects_multiple_scenes(fixture_dir: Path) -> None:
+    raw_text = (fixture_dir / "numbered_scene_screenplay.txt").read_text()
+
+    result = ScreenplayParser().parse(raw_text=raw_text, title="Numbered Scene")
+
+    assert result.total_scenes == 2
+    assert result.scenes[0].heading == ".INT. LAB - NIGHT #12#"
+    assert result.scenes[1].heading == "EXT. ROOFTOP - CONTINUOUS"
+    assert any(element.speaker == "DR. MAYA" for element in result.scenes[0].elements)
+
+
+def test_realistic_voiceover_fixture_keeps_transition_outside_scene_count(fixture_dir: Path) -> None:
+    raw_text = (fixture_dir / "voiceover_screenplay.txt").read_text()
+
+    result = ScreenplayParser().parse(raw_text=raw_text, title="Voiceover")
+
+    assert result.total_scenes == 1
+    dialogue = next(element for element in result.scenes[0].elements if element.element_type == "dialogue")
+    transition = next(element for element in result.scenes[0].elements if element.element_type == "transition")
+    assert dialogue.speaker == "JONAH"
+    assert transition.text == "CUT TO:"

@@ -3,6 +3,7 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
+from app.db.models.correction import CorrectionRecord
 from app.db.models.scene import Scene
 from app.db.models.script import Script
 
@@ -20,6 +21,7 @@ class ScriptRepository:
             .options(
                 selectinload(Script.scenes).selectinload(Scene.blocks),
                 selectinload(Script.blocks),
+                selectinload(Script.corrections),
             )
             .order_by(Script.created_at.desc())
         )
@@ -32,6 +34,7 @@ class ScriptRepository:
             .options(
                 selectinload(Script.scenes).selectinload(Scene.blocks),
                 selectinload(Script.blocks),
+                selectinload(Script.corrections),
             )
         )
         return session.scalars(stmt).unique().one_or_none()

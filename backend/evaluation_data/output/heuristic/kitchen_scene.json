@@ -1,0 +1,40 @@
+{
+  "script_id": "kitchen_scene",
+  "mode": "heuristic",
+  "summary": [
+    {
+      "task": "action_attribution",
+      "total": 1,
+      "exact_match": 1,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    },
+    {
+      "task": "mention_resolution",
+      "total": 2,
+      "exact_match": 2,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    },
+    {
+      "task": "speaker_attribution",
+      "total": 1,
+      "exact_match": 1,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    }
+  ],
+  "errors": []
+}

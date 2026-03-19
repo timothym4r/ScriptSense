@@ -1,0 +1,89 @@
+{
+  "script_id": "kitchen_scene",
+  "mode": "baseline",
+  "summary": [
+    {
+      "task": "action_attribution",
+      "total": 1,
+      "exact_match": 0,
+      "ambiguous_match": 0,
+      "unresolved": 1,
+      "incorrect": 0,
+      "exact_match_rate": 0.0,
+      "ambiguity_aware_rate": 0.0,
+      "unresolved_rate": 1.0
+    },
+    {
+      "task": "mention_resolution",
+      "total": 2,
+      "exact_match": 0,
+      "ambiguous_match": 0,
+      "unresolved": 2,
+      "incorrect": 0,
+      "exact_match_rate": 0.0,
+      "ambiguity_aware_rate": 0.0,
+      "unresolved_rate": 1.0
+    },
+    {
+      "task": "speaker_attribution",
+      "total": 1,
+      "exact_match": 1,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    }
+  ],
+  "errors": [
+    {
+      "script_id": "kitchen_scene",
+      "task": "mention_resolution",
+      "scene_number": 1,
+      "element_index": 3,
+      "mention_text": "Jonah",
+      "gold_status": "resolved",
+      "predicted_status": "unresolved",
+      "gold_characters": [
+        "JONAH"
+      ],
+      "predicted_character": null,
+      "predicted_candidates": [],
+      "outcome": "unresolved",
+      "confidence": 0.0
+    },
+    {
+      "script_id": "kitchen_scene",
+      "task": "mention_resolution",
+      "scene_number": 1,
+      "element_index": 3,
+      "mention_text": "He",
+      "gold_status": "resolved",
+      "predicted_status": "unresolved",
+      "gold_characters": [
+        "JONAH"
+      ],
+      "predicted_character": null,
+      "predicted_candidates": [],
+      "outcome": "unresolved",
+      "confidence": 0.0
+    },
+    {
+      "script_id": "kitchen_scene",
+      "task": "action_attribution",
+      "scene_number": 1,
+      "element_index": 3,
+      "mention_text": null,
+      "gold_status": "resolved",
+      "predicted_status": "unresolved",
+      "gold_characters": [
+        "JONAH"
+      ],
+      "predicted_character": null,
+      "predicted_candidates": [],
+      "outcome": "unresolved",
+      "confidence": 0.0
+    }
+  ]
+}

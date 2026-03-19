@@ -112,6 +112,18 @@ class ScreenplayParser:
                 pointer += 1
                 continue
 
+            if self._is_dialogue_continuation_parenthetical(lines, pointer, elements):
+                continuation_elements, next_pointer = self._consume_dialogue_continuation(
+                    index,
+                    lines,
+                    pointer,
+                    elements[-1].speaker,
+                )
+                elements.extend(continuation_elements)
+                index = len(elements) + 1
+                pointer = next_pointer
+                continue
+
             if self._is_character_cue(lines, pointer):
                 element, next_pointer = self._consume_dialogue(index, lines, pointer)
                 elements.extend(element)
@@ -254,6 +266,33 @@ class ScreenplayParser:
             pointer,
         )
 
+    def _consume_dialogue_continuation(
+        self,
+        element_index: int,
+        lines: list[ClassifiedLine],
+        pointer: int,
+        speaker: Optional[str],
+    ) -> tuple[list[ParsedElement], int]:
+        parenthetical_line = lines[pointer]
+        next_index = self._next_meaningful_index(lines, pointer + 1)
+        elements = [
+            ParsedElement(
+                element_index=element_index,
+                element_type="parenthetical",
+                text=parenthetical_line.text.strip(),
+                start_line=parenthetical_line.number,
+                end_line=parenthetical_line.number,
+                speaker=speaker,
+            )
+        ]
+
+        if next_index is None:
+            return elements, pointer + 1
+
+        following_elements, next_pointer = self._consume_dialogue(element_index + 1, lines, next_index)
+        elements.extend(following_elements)
+        return elements, next_pointer
+
     def _is_blank(self, text: str) -> bool:
         return not text.strip()
 
@@ -290,6 +329,27 @@ class ScreenplayParser:
         if self._looks_like_character_cue(next_line.text):
             return False
         return True
+
+    def _is_dialogue_continuation_parenthetical(
+        self,
+        lines: list[ClassifiedLine],
+        pointer: int,
+        existing_elements: list[ParsedElement],
+    ) -> bool:
+        if not existing_elements:
+            return False
+        previous = existing_elements[-1]
+        if previous.element_type not in {"dialogue", "parenthetical"} or not previous.speaker:
+            return False
+        if not self._is_parenthetical(lines[pointer].text):
+            return False
+
+        next_index = self._next_meaningful_index(lines, pointer + 1)
+        if next_index is None or not self._is_character_cue(lines, next_index):
+            return False
+
+        next_speaker = self._normalize_speaker(lines[next_index].text)
+        return next_speaker == previous.speaker
 
     def _looks_like_character_cue(self, text: str) -> bool:
         stripped = text.strip()

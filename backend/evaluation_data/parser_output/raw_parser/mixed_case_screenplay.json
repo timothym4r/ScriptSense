@@ -1,0 +1,143 @@
+{
+  "script_id": "mixed_case_screenplay",
+  "mode": "raw_parser",
+  "summary": [
+    {
+      "task": "scene_detection",
+      "gold_total": 1,
+      "predicted_total": 1,
+      "exact_match": 0,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "exact_match_rate": 0.0
+    },
+    {
+      "task": "speaker_attribution",
+      "gold_total": 2,
+      "predicted_total": 0,
+      "exact_match": 0,
+      "missing": 2,
+      "extra": 0,
+      "incorrect": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "exact_match_rate": 0.0
+    },
+    {
+      "task": "block_type_classification",
+      "gold_total": 3,
+      "predicted_total": 3,
+      "exact_match": 0,
+      "missing": 3,
+      "extra": 3,
+      "incorrect": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "exact_match_rate": 0.0
+    }
+  ],
+  "errors": [
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "scene_detection",
+      "outcome": "incorrect",
+      "scene_number": 1,
+      "block_key": null,
+      "text_excerpt": null,
+      "gold_value": "INT. HALLWAY - NIGHT [1-8]",
+      "predicted_value": "None [1-9]",
+      "detail": "Scene heading or boundaries differ from corrected output."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "block_type_classification",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:4-4",
+      "text_excerpt": "(whispering)",
+      "gold_value": "parenthetical",
+      "predicted_value": null,
+      "detail": "Corrected block span was not produced by the parser."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "block_type_classification",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:5-5",
+      "text_excerpt": "I heard him downstairs.",
+      "gold_value": "dialogue",
+      "predicted_value": null,
+      "detail": "Corrected block span was not produced by the parser."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "block_type_classification",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:8-8",
+      "text_excerpt": "Stay calm.",
+      "gold_value": "dialogue",
+      "predicted_value": null,
+      "detail": "Corrected block span was not produced by the parser."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "block_type_classification",
+      "outcome": "extra",
+      "scene_number": 1,
+      "block_key": "1:1-1",
+      "text_excerpt": "Int. Hallway - Night",
+      "gold_value": null,
+      "predicted_value": "action",
+      "detail": "Parser produced an extra non-heading block not present in corrected output."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "block_type_classification",
+      "outcome": "extra",
+      "scene_number": 1,
+      "block_key": "1:3-5",
+      "text_excerpt": "Mia (whispering) I heard him downstairs.",
+      "gold_value": null,
+      "predicted_value": "action",
+      "detail": "Parser produced an extra non-heading block not present in corrected output."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "block_type_classification",
+      "outcome": "extra",
+      "scene_number": 1,
+      "block_key": "1:7-8",
+      "text_excerpt": "Jonah Stay calm.",
+      "gold_value": null,
+      "predicted_value": "action",
+      "detail": "Parser produced an extra non-heading block not present in corrected output."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "speaker_attribution",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:5-5",
+      "text_excerpt": "I heard him downstairs.",
+      "gold_value": "MIA",
+      "predicted_value": null,
+      "detail": "Dialogue block was not aligned, so no speaker could be compared."
+    },
+    {
+      "script_id": "mixed_case_screenplay",
+      "task": "speaker_attribution",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:8-8",
+      "text_excerpt": "Stay calm.",
+      "gold_value": "JONAH",
+      "predicted_value": null,
+      "detail": "Dialogue block was not aligned, so no speaker could be compared."
+    }
+  ]
+}

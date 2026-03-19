@@ -1,0 +1,31 @@
+{
+  "script_id": "dr_maya_alias",
+  "title": "Dr Maya Alias",
+  "raw_text": "INT. HALLWAY - NIGHT\n\nDR. MAYA\nStay behind me.\n\nMaya checks the stairwell.\n",
+  "speaker_attribution": [
+    {
+      "scene_number": 1,
+      "element_index": 2,
+      "resolution_status": "resolved",
+      "acceptable_characters": ["DR. MAYA"]
+    }
+  ],
+  "mention_resolution": [
+    {
+      "scene_number": 1,
+      "element_index": 3,
+      "mention_text": "Maya",
+      "mention_occurrence": 1,
+      "resolution_status": "resolved",
+      "acceptable_characters": ["DR. MAYA"]
+    }
+  ],
+  "action_attribution": [
+    {
+      "scene_number": 1,
+      "element_index": 3,
+      "resolution_status": "resolved",
+      "acceptable_characters": ["DR. MAYA"]
+    }
+  ]
+}

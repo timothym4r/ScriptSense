@@ -1,0 +1,110 @@
+{
+  "script_id": "long_parenthetical_screenplay",
+  "mode": "raw_parser",
+  "summary": [
+    {
+      "task": "scene_detection",
+      "gold_total": 1,
+      "predicted_total": 1,
+      "exact_match": 0,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "exact_match_rate": 0.0
+    },
+    {
+      "task": "speaker_attribution",
+      "gold_total": 2,
+      "predicted_total": 2,
+      "exact_match": 1,
+      "missing": 1,
+      "extra": 1,
+      "incorrect": 0,
+      "precision": 0.5,
+      "recall": 0.5,
+      "exact_match_rate": 0.5
+    },
+    {
+      "task": "block_type_classification",
+      "gold_total": 3,
+      "predicted_total": 2,
+      "exact_match": 1,
+      "missing": 2,
+      "extra": 1,
+      "incorrect": 0,
+      "precision": 0.5,
+      "recall": 0.333,
+      "exact_match_rate": 0.333
+    }
+  ],
+  "errors": [
+    {
+      "script_id": "long_parenthetical_screenplay",
+      "task": "scene_detection",
+      "outcome": "incorrect",
+      "scene_number": 1,
+      "block_key": null,
+      "text_excerpt": null,
+      "gold_value": "INT. APARTMENT - NIGHT [1-8]",
+      "predicted_value": "INT. APARTMENT - NIGHT [1-9]",
+      "detail": "Scene heading or boundaries differ from corrected output."
+    },
+    {
+      "script_id": "long_parenthetical_screenplay",
+      "task": "block_type_classification",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:4-4",
+      "text_excerpt": "(quiet, to herself, barely audible over the rain)",
+      "gold_value": "parenthetical",
+      "predicted_value": null,
+      "detail": "Corrected block span was not produced by the parser."
+    },
+    {
+      "script_id": "long_parenthetical_screenplay",
+      "task": "block_type_classification",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:5-5",
+      "text_excerpt": "I still remember the bridge.",
+      "gold_value": "dialogue",
+      "predicted_value": null,
+      "detail": "Corrected block span was not produced by the parser."
+    },
+    {
+      "script_id": "long_parenthetical_screenplay",
+      "task": "block_type_classification",
+      "outcome": "extra",
+      "scene_number": 1,
+      "block_key": "1:4-5",
+      "text_excerpt": "(quiet, to herself, barely audible over the rain) I still remember the bridge.",
+      "gold_value": null,
+      "predicted_value": "dialogue",
+      "detail": "Parser produced an extra non-heading block not present in corrected output."
+    },
+    {
+      "script_id": "long_parenthetical_screenplay",
+      "task": "speaker_attribution",
+      "outcome": "missing",
+      "scene_number": 1,
+      "block_key": "1:5-5",
+      "text_excerpt": "I still remember the bridge.",
+      "gold_value": "MIA",
+      "predicted_value": null,
+      "detail": "Dialogue block was not aligned, so no speaker could be compared."
+    },
+    {
+      "script_id": "long_parenthetical_screenplay",
+      "task": "speaker_attribution",
+      "outcome": "extra",
+      "scene_number": 1,
+      "block_key": "1:4-5",
+      "text_excerpt": "(quiet, to herself, barely audible over the rain) I still remember the bridge.",
+      "gold_value": null,
+      "predicted_value": "MIA",
+      "detail": "Parser produced an extra dialogue block not present in corrected output."
+    }
+  ]
+}

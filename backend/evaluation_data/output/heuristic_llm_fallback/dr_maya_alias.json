@@ -1,0 +1,40 @@
+{
+  "script_id": "dr_maya_alias",
+  "mode": "heuristic_llm_fallback",
+  "summary": [
+    {
+      "task": "action_attribution",
+      "total": 1,
+      "exact_match": 1,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    },
+    {
+      "task": "mention_resolution",
+      "total": 1,
+      "exact_match": 1,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    },
+    {
+      "task": "speaker_attribution",
+      "total": 1,
+      "exact_match": 1,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    }
+  ],
+  "errors": []
+}

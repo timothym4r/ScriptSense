@@ -3,20 +3,17 @@ from typing import Optional
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from app.schemas.parse import ParseRequest, ParsedScriptResponse
-from app.services.parsing.screenplay_parser import ScreenplayParser
-from app.services.semantic.enricher import SemanticEnricher
+from app.services.validation.parse_pipeline import ValidatedParsePipeline
 
 router = APIRouter(tags=["parse"])
 
-parser = ScreenplayParser()
-semantic_enricher = SemanticEnricher()
+pipeline = ValidatedParsePipeline()
 
 
 @router.post("/parse", response_model=ParsedScriptResponse)
 def parse_script(request: ParseRequest) -> ParsedScriptResponse:
-    parsed = parser.parse(raw_text=request.raw_text, title=request.title)
-    enriched = semantic_enricher.enrich(parsed)
-    return ParsedScriptResponse.model_validate(enriched)
+    parsed = pipeline.parse_text(raw_text=request.raw_text, title=request.title)
+    return ParsedScriptResponse.model_validate(parsed)
 
 
 @router.post("/parse-file", response_model=ParsedScriptResponse)
@@ -36,6 +33,10 @@ async def parse_script_file(
             detail="Only UTF-8 plaintext screenplay files are supported.",
         ) from exc
 
-    parsed = parser.parse(raw_text=raw_text, title=title or script_file.filename)
-    enriched = semantic_enricher.enrich(parsed)
-    return ParsedScriptResponse.model_validate(enriched)
+    parsed = pipeline.parse_file(
+        raw_text=raw_text,
+        filename=script_file.filename,
+        content_type=script_file.content_type,
+        title=title or script_file.filename,
+    )
+    return ParsedScriptResponse.model_validate(parsed)

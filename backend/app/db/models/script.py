@@ -36,3 +36,9 @@ class Script(Base):
         cascade="all, delete-orphan",
         order_by="ScriptBlock.global_element_index",
     )
+    corrections = relationship(
+        "CorrectionRecord",
+        back_populates="script",
+        cascade="all, delete-orphan",
+        order_by="CorrectionRecord.created_at",
+    )

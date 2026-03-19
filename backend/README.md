@@ -9,8 +9,10 @@ Minimal FastAPI backend for Phase 1 of ScriptSense.
 - parses scripts into scenes, action blocks, dialogue blocks, speakers, and parentheticals
 - stores raw scripts and parsed outputs with SQLAlchemy
 - enriches parsed output with a semantic attribution layer
+- stores append-only manual correction records for review and audit
 - returns structured JSON
 - includes parser unit tests and API smoke tests
+- includes parser evaluation using corrected review data
 
 ## Tech Stack
 
@@ -73,6 +75,63 @@ The API will be available at `http://127.0.0.1:8000`.
 pytest
 ```
 
+## Run Parser Evaluation
+
+The backend now includes a structural parser evaluation track that compares:
+
+- `raw_parser`: direct rules-based parser output
+- `corrected_output`: the corrected review data itself, used as a sanity-check ceiling
+
+### Gold / Corrected Data Format
+
+Evaluation files live in `evaluation_data/parser_gold/` and contain:
+
+- `raw_text`: the original screenplay text
+- `corrected_scenes`: manually reviewed scene and block structure
+- scene boundaries with `scene_number`, `heading`, `start_line`, `end_line`
+- corrected blocks with `element_type`, `text`, `speaker`, `start_line`, `end_line`
+
+This format is intentionally close to the platform's reviewed output so corrected data can later be exported into evaluation directly.
+
+### Run the evaluator
+
+```bash
+python3 -m app.evaluation.parser_runner \
+  --data-dir evaluation_data/parser_gold \
+  --output-dir evaluation_data/parser_output \
+  --modes raw_parser corrected_output
+```
+
+### What it measures
+
+- `scene_detection`
+  - exact match requires heading and line boundaries to match corrected output
+- `speaker_attribution`
+  - evaluated on dialogue blocks aligned by scene number and line span
+- `block_type_classification`
+  - evaluated on non-heading blocks aligned by scene number and line span
+
+### Output
+
+The runner writes:
+
+- per-script JSON reports under `evaluation_data/parser_output/<mode>/`
+- a combined summary report at `evaluation_data/parser_output/combined_report.json`
+
+Example checked-in outputs:
+
+- `evaluation_data/examples/parser_combined_report.json`
+- `evaluation_data/examples/parser_mixed_case_error_report.json`
+
+The error analysis output is intentionally inspectable. Each error includes:
+
+- task name
+- outcome (`missing`, `extra`, or `incorrect`)
+- scene number / block span
+- text excerpt when relevant
+- corrected value vs predicted value
+- a short explanation
+
 ## Example Request
 
 ### Parse pasted script text
@@ -123,6 +182,19 @@ curl "http://127.0.0.1:8000/api/v1/scripts"
 
 ```bash
 curl "http://127.0.0.1:8000/api/v1/scripts/<script-id>"
+```
+
+### Save a manual correction
+
+```bash
+curl -X POST "http://127.0.0.1:8000/api/v1/scripts/<script-id>/corrections" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "target_type": "block",
+    "target_id": "<block-id>",
+    "corrected_field": "text",
+    "new_value": "Corrected dialogue line."
+  }'
 ```
 
 ## Example Response
@@ -200,6 +272,26 @@ Current enrichment behavior:
 - attributes action blocks to likely characters
 - preserves ambiguity with candidate lists and explicit resolution status fields
 
+## Review And Correction Workflow
+
+Stored script reads now preserve both:
+
+- the original parsed structure stored in the database
+- the latest corrected values produced by replaying append-only correction records
+
+Each corrected scene or block includes:
+
+- original values such as `original_heading`, `original_text`, and `original_speaker`
+- `is_corrected`
+- per-item `corrections`
+
+The top-level stored script response also includes a full `corrections` audit list with:
+
+- `corrected_field`
+- `old_value`
+- `new_value`
+- `timestamp`
+
 Key enriched fields include:
 
 - `speaker_character_id`
@@ -259,6 +351,160 @@ Example enriched action block fragment:
   }
 }
 ```
+
+## Evaluation Framework
+
+ScriptSense now includes a small but realistic local evaluation pipeline for speaker attribution, mention resolution, and action attribution.
+
+### Gold annotation format
+
+Gold examples live in `evaluation_data/gold/*.json`.
+
+Each file contains:
+
+- `script_id`
+- `title`
+- `raw_text`
+- `speaker_attribution`
+- `mention_resolution`
+- `action_attribution`
+
+Each annotation target is identified by:
+
+- `scene_number`
+- `element_index`
+- optional `mention_text`
+- optional `mention_occurrence`
+- `resolution_status`
+- `acceptable_characters`
+
+This format keeps annotations explicit and easy to extend by hand.
+
+### Evaluation modes
+
+- `baseline`
+  - parser-only output
+  - dialogue speaker strings from the structural parser
+  - no semantic mention or action attribution
+- `heuristic`
+  - semantic registry, mention extraction, pronoun resolution, and action attribution
+- `heuristic_llm_fallback`
+  - heuristic semantic layer plus an offline pluggable fallback resolver
+  - this repo ships a deterministic local fallback so evaluation runs offline
+  - it is the integration seam for a future real LLM-backed resolver
+
+### Metrics
+
+Each task reports:
+
+- `exact_match`
+- `ambiguous_match`
+- `unresolved`
+- `incorrect`
+- `exact_match_rate`
+- `ambiguity_aware_rate`
+- `unresolved_rate`
+
+The evaluation intentionally separates exact resolution from ambiguity-preserving partial success.
+
+### Run evaluation
+
+```bash
+python3 -m app.evaluation.runner \
+  --data-dir evaluation_data/gold \
+  --output-dir evaluation_data/output \
+  --modes baseline heuristic heuristic_llm_fallback
+```
+
+### Outputs
+
+The runner prints summary metrics to stdout and writes JSON reports to `evaluation_data/output/`.
+
+You will get:
+
+- per-mode report files
+- a combined report file
+- inspectable non-exact cases for error analysis
+
+Example error analysis fields include:
+
+- task
+- scene number
+- element index
+- mention text
+- gold status
+- predicted status
+- gold characters
+- predicted character
+- predicted candidates
+- outcome
+- confidence
+
+## Parser Assumptions And Limits
+
+The structural parser is intentionally rules-based and optimized for readability and debuggability rather than full screenplay-format coverage.
+
+Current assumptions:
+
+- scene headings are typically uppercase and begin with `INT.`, `EXT.`, `INT/EXT.`, `EXT/INT.`, `I/E.`, or `EST.`
+- dialogue cues are uppercase character lines followed by dialogue-like content
+- short parenthetical lines inside dialogue are treated as parentheticals
+- action blocks are grouped until a scene heading, transition, or dialogue cue interrupts them
+- speaker suffixes such as `(V.O.)`, `(O.S.)`, and `CONT'D` are normalized for attribution
+
+Realistic cases currently covered by tests:
+
+- numbered scene headings such as `.INT. LAB - NIGHT #12#`
+- voice-over speaker cues such as `JONAH (V.O.)`
+- dialogue continuation with `MIA (CONT'D)`
+- interleaved dialogue parentheticals such as `(beat)` and `(whispering)`
+- uppercase action lines that should not be misread as character cues
+
+Known limitations:
+
+- screenplay formatting that depends heavily on indentation is not modeled yet
+- centered text conventions are not explicitly detected
+- dual dialogue is not supported
+- highly nonstandard scene heading formats may still be missed
+- parentheticals outside dialogue are treated conservatively as action text
+- imported PDFs are not parsed directly yet; use extracted plaintext `.txt` screenplay files
+
+## Input Validation Layer
+
+Before parsing, ScriptSense now runs a rules-based validation step that answers two questions:
+
+1. is this input type supported right now?
+2. does the extracted text look enough like a screenplay to parse honestly?
+
+Structured validation fields exposed in parse and stored-script responses:
+
+- `is_supported_file_type`
+- `is_likely_screenplay`
+- `screenplay_confidence`
+- `rejection_reason`
+- `validation_signals`
+
+Current supported input types:
+
+- pasted text input
+- plaintext `.txt` screenplay files
+
+Currently rejected explicitly:
+
+- PDF
+- DOCX
+- unknown file types
+
+The validator looks for transparent structural screenplay cues such as:
+
+- scene headings like `INT.` and `EXT.`
+- uppercase character cue lines
+- dialogue-like blocks
+- parentheticals
+- dialogue/action alternation
+- screenplay transitions
+
+If the confidence is too low, the backend returns a clear validation error instead of pretending to parse arbitrary text.
 
 ## Project Layout
 

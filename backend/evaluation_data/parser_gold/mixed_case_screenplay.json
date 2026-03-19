@@ -1,0 +1,48 @@
+{
+  "script_id": "mixed_case_screenplay",
+  "title": "Mixed Case Screenplay",
+  "raw_text": "Int. Hallway - Night\n\nMia\n(whispering)\nI heard him downstairs.\n\nJonah\nStay calm.\n",
+  "notes": "Lowercase scene heading and mixed-case speaker cues require manual correction.",
+  "corrected_scenes": [
+    {
+      "scene_number": 1,
+      "heading": "INT. HALLWAY - NIGHT",
+      "start_line": 1,
+      "end_line": 8,
+      "blocks": [
+        {
+          "element_index": 1,
+          "element_type": "scene_heading",
+          "text": "INT. HALLWAY - NIGHT",
+          "start_line": 1,
+          "end_line": 1,
+          "speaker": null
+        },
+        {
+          "element_index": 2,
+          "element_type": "parenthetical",
+          "text": "(whispering)",
+          "start_line": 4,
+          "end_line": 4,
+          "speaker": "MIA"
+        },
+        {
+          "element_index": 3,
+          "element_type": "dialogue",
+          "text": "I heard him downstairs.",
+          "start_line": 5,
+          "end_line": 5,
+          "speaker": "MIA"
+        },
+        {
+          "element_index": 4,
+          "element_type": "dialogue",
+          "text": "Stay calm.",
+          "start_line": 8,
+          "end_line": 8,
+          "speaker": "JONAH"
+        }
+      ]
+    }
+  ]
+}

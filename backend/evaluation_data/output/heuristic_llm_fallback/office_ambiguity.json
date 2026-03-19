@@ -1,0 +1,81 @@
+{
+  "script_id": "office_ambiguity",
+  "mode": "heuristic_llm_fallback",
+  "summary": [
+    {
+      "task": "action_attribution",
+      "total": 1,
+      "exact_match": 0,
+      "ambiguous_match": 1,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 0.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    },
+    {
+      "task": "mention_resolution",
+      "total": 1,
+      "exact_match": 0,
+      "ambiguous_match": 1,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 0.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    },
+    {
+      "task": "speaker_attribution",
+      "total": 2,
+      "exact_match": 2,
+      "ambiguous_match": 0,
+      "unresolved": 0,
+      "incorrect": 0,
+      "exact_match_rate": 1.0,
+      "ambiguity_aware_rate": 1.0,
+      "unresolved_rate": 0.0
+    }
+  ],
+  "errors": [
+    {
+      "script_id": "office_ambiguity",
+      "task": "mention_resolution",
+      "scene_number": 1,
+      "element_index": 4,
+      "mention_text": "He",
+      "gold_status": "ambiguous",
+      "predicted_status": "ambiguous",
+      "gold_characters": [
+        "MIA",
+        "JONAH"
+      ],
+      "predicted_character": null,
+      "predicted_candidates": [
+        "JONAH",
+        "MIA"
+      ],
+      "outcome": "ambiguous_match",
+      "confidence": 0.6
+    },
+    {
+      "script_id": "office_ambiguity",
+      "task": "action_attribution",
+      "scene_number": 1,
+      "element_index": 4,
+      "mention_text": null,
+      "gold_status": "ambiguous",
+      "predicted_status": "ambiguous",
+      "gold_characters": [
+        "MIA",
+        "JONAH"
+      ],
+      "predicted_character": null,
+      "predicted_candidates": [
+        "JONAH",
+        "MIA"
+      ],
+      "outcome": "ambiguous_match",
+      "confidence": 0.6
+    }
+  ]
+}

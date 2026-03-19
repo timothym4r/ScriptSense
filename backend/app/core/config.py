@@ -14,6 +14,9 @@ class Settings:
         for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
         if origin.strip()
     )
+    screenplay_validation_threshold: float = float(
+        os.getenv("SCREENPLAY_VALIDATION_THRESHOLD", "0.45")
+    )
 
 
 settings = Settings()

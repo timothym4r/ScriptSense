@@ -1,0 +1,66 @@
+{
+  "script_id": "sample_screenplay_corrected",
+  "mode": "raw_parser",
+  "summary": [
+    {
+      "task": "scene_detection",
+      "gold_total": 2,
+      "predicted_total": 2,
+      "exact_match": 0,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "exact_match_rate": 0.0
+    },
+    {
+      "task": "speaker_attribution",
+      "gold_total": 3,
+      "predicted_total": 3,
+      "exact_match": 3,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "exact_match_rate": 1.0
+    },
+    {
+      "task": "block_type_classification",
+      "gold_total": 8,
+      "predicted_total": 8,
+      "exact_match": 8,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "exact_match_rate": 1.0
+    }
+  ],
+  "errors": [
+    {
+      "script_id": "sample_screenplay_corrected",
+      "task": "scene_detection",
+      "outcome": "incorrect",
+      "scene_number": 1,
+      "block_key": null,
+      "text_excerpt": null,
+      "gold_value": "INT. COFFEE SHOP - DAY [3-14]",
+      "predicted_value": "INT. COFFEE SHOP - DAY [3-16]",
+      "detail": "Scene heading or boundaries differ from corrected output."
+    },
+    {
+      "script_id": "sample_screenplay_corrected",
+      "task": "scene_detection",
+      "outcome": "incorrect",
+      "scene_number": 2,
+      "block_key": null,
+      "text_excerpt": null,
+      "gold_value": "EXT. CITY STREET - NIGHT [17-24]",
+      "predicted_value": "EXT. CITY STREET - NIGHT [17-26]",
+      "detail": "Scene heading or boundaries differ from corrected output."
+    }
+  ]
+}

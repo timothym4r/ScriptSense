@@ -1,0 +1,43 @@
+{
+  "script_id": "mixed_case_screenplay",
+  "mode": "corrected_output",
+  "summary": [
+    {
+      "task": "scene_detection",
+      "gold_total": 1,
+      "predicted_total": 1,
+      "exact_match": 1,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "exact_match_rate": 1.0
+    },
+    {
+      "task": "speaker_attribution",
+      "gold_total": 2,
+      "predicted_total": 2,
+      "exact_match": 2,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "exact_match_rate": 1.0
+    },
+    {
+      "task": "block_type_classification",
+      "gold_total": 3,
+      "predicted_total": 3,
+      "exact_match": 3,
+      "missing": 0,
+      "extra": 0,
+      "incorrect": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "exact_match_rate": 1.0
+    }
+  ],
+  "errors": []
+}

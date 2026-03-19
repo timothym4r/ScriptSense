@@ -1,0 +1,39 @@
+{
+  "script_id": "kitchen_scene",
+  "title": "Kitchen Scene",
+  "raw_text": "INT. KITCHEN - DAY\n\nMIA\nWhere is Jonah?\n\nJonah enters with a torn envelope.\nHe drops it on the table.\n",
+  "speaker_attribution": [
+    {
+      "scene_number": 1,
+      "element_index": 2,
+      "resolution_status": "resolved",
+      "acceptable_characters": ["MIA"]
+    }
+  ],
+  "mention_resolution": [
+    {
+      "scene_number": 1,
+      "element_index": 3,
+      "mention_text": "Jonah",
+      "mention_occurrence": 1,
+      "resolution_status": "resolved",
+      "acceptable_characters": ["JONAH"]
+    },
+    {
+      "scene_number": 1,
+      "element_index": 3,
+      "mention_text": "He",
+      "mention_occurrence": 1,
+      "resolution_status": "resolved",
+      "acceptable_characters": ["JONAH"]
+    }
+  ],
+  "action_attribution": [
+    {
+      "scene_number": 1,
+      "element_index": 3,
+      "resolution_status": "resolved",
+      "acceptable_characters": ["JONAH"]
+    }
+  ]
+}

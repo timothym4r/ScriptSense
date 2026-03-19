@@ -22,7 +22,7 @@ class CharacterResolutionCandidate(BaseModel):
 class CharacterAliasRecord(BaseModel):
     alias_text: str
     normalized_alias: str
-    alias_type: Literal["speaker", "derived", "action_mention"]
+    alias_type: Literal["speaker", "derived", "action_mention", "dialogue_mention"]
     confidence: float
 
 
@@ -43,6 +43,7 @@ class EnrichedMention(BaseModel):
     resolved_character_candidates: list[CharacterResolutionCandidate] = Field(default_factory=list)
     attribution_confidence: float = 0.0
     resolution_status: ResolutionStatus = "unresolved"
+    resolver_type: str = "none"
 
 
 class ActionAttribution(BaseModel):
@@ -52,3 +53,4 @@ class ActionAttribution(BaseModel):
     attribution_confidence: float = 0.0
     resolution_status: ResolutionStatus = "unresolved"
     rationale: str
+    resolver_type: str = "none"
